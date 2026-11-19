@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zombie-skills"
+version = "1.0.0"
+description = "Portable SQLite skill library and local keyword router for AI agents"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "ZombieCoder", email = "infi@zombiecoder.my.id"}]
+keywords = ["agents", "skills", "sqlite", "llm", "router"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+[project.scripts]
+zombie-skills = "zombie_skills.cli:main"
+
+[tool.setuptools]
+packages = ["zombie_skills"]

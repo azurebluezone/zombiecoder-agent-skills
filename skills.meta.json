@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-11-19T22:25:21Z",
+  "skills": 248,
+  "terms": 72631,
+  "bytes": 2044906,
+  "audit": {
+    "keep": 248,
+    "drop": 341,
+    "review": 0,
+    "engineering": 248,
+    "business": 206,
+    "offensive": 68,
+    "stub": 67,
+    "duplicate": 0
+  },
+  "sources": [
+    {
+      "source": "ConardLi/garden-skills",
+      "url": "https://github.com/ConardLi/garden-skills",
+      "license": "MIT",
+      "skills": 6
+    },
+    {
+      "source": "alirezarezvani/claude-skills",
+      "url": "https://github.com/alirezarezvani/claude-skills",
+      "license": "MIT",
+      "skills": 182
+    },
+    {
+      "source": "gmh5225/awesome-game-security",
+      "url": "https://github.com/gmh5225/awesome-game-security",
+      "license": "MIT",
+      "skills": 13
+    },
+    {
+      "source": "morluto/rea",
+      "url": "https://github.com/morluto/rea",
+      "license": "MIT",
+      "skills": 5
+    },
+    {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "license": "MIT",
+      "skills": 7
+    },
+    {
+      "source": "zhaoxuya520/reverse-skill",
+      "url": "https://github.com/zhaoxuya520/reverse-skill",
+      "license": "MIT",
+      "skills": 35
+    }
+  ],
+  "files": {
+    "skills.db": {
+      "sha256": "d1e2a55825bf077b7a3f4e8708c54bbdebe65aa14c6c6b4a96808db66c6527ed",
+      "bytes": 8986624
+    },
+    "skills.jsonl": {
+      "sha256": "35221124dbbf955ca3dff07320b5ccbf0b304e426b2be6e4f9129abd3e562611",
+      "bytes": 2314176
+    },
+    "terms.jsonl": {
+      "sha256": "f477d9c8ec7ec364b1e0b16a556de3440ff80c0c0e45df2c142caef662810edb",
+      "bytes": 4969455
+    }
+  }
+}

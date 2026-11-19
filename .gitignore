@@ -1,0 +1,29 @@
+# byte-code and caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# virtual environments
+.venv/
+venv/
+
+# node
+node_modules/
+npm-debug.log*
+
+# local data never committed
+.zombie-skills/
+*.tmp
+*.part
+*.log
+
+# intermediate audit runs (keep audit/report.*)
+audit_v*/
+
+# editors / OS
+.DS_Store
+.idea/
+.vscode/

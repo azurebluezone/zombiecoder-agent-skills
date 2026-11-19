@@ -1,0 +1,34 @@
+{
+  "name": "zombiecoder-agent-skills",
+  "version": "1.0.0",
+  "description": "Portable, audited skill library for AI agents: SQLite + JSONL data, deterministic router, Python and Node CLIs.",
+  "main": "node/index.js",
+  "bin": {
+    "zombie-skills": "node/bin/cli.js"
+  },
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "node/",
+    "skills.jsonl",
+    "terms.jsonl",
+    "README.md",
+    "LICENSE",
+    "NOTICE.md"
+  ],
+  "scripts": {
+    "test": "node node/test.js"
+  },
+  "keywords": [
+    "agents",
+    "skills",
+    "sqlite",
+    "llm",
+    "router",
+    "jsonl",
+    "mcp"
+  ],
+  "license": "MIT"
+}
