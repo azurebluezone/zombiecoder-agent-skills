@@ -19,6 +19,7 @@
     "examples/",
     "docs/",
     "tools/",
+    "install.py",
     "skills.db",
     "skills.jsonl",
     "terms.jsonl",
@@ -34,8 +35,10 @@
     "check:mcp": "python3 tools/check_skill_mcp.py",
     "check:onboarding": "python3 tools/check_agent_onboarding.py",
     "check:clients": "python3 tools/check_client_skills.py",
+    "check:clients:auto": "python3 tools/check_client_skills.py --auto",
     "install:skills": "python3 tools/install_opencode_skills.py",
     "install:clients": "python3 tools/install_client_skills.py",
+    "install:auto": "python3 install.py",
     "mcp": "python3 server/skill_mcp.py"
   },
   "keywords": [

@@ -177,16 +177,15 @@ The same algorithm is implemented in the gateway (`welcome_to_colab.py`), Python
 
 ## Client skills (Cursor, OpenCode, VS Code, Windsurf, Claude Code, Codex)
 
-The eight audited packs are portable `SKILL.md` files. One command installs them into every client's real discovery path and writes the `AGENTS.md` / `CLAUDE.md` index:
+The eight audited packs are portable `SKILL.md` files. One command detects the OS and the installed editors, finds the project root from any directory, and installs into every detected client's real discovery path:
 
 ```bash
 git clone https://github.com/azurebluezone/zombiecoder-agent-skills.git
-cd zombiecoder-agent-skills
-python3 tools/install_client_skills.py --client all --target /path/to/your/project
-python3 tools/install_client_skills.py --check --client all --target /path/to/your/project
+python3 /path/to/zombiecoder-agent-skills/install.py          # defaults to --auto
+python3 /path/to/zombiecoder-agent-skills/install.py --check
 ```
 
-Use `--scope global` for your home directory instead of one project. The path matrix, per-client commands and the verification gate are in [docs/CLIENT-SKILLS.md](docs/CLIENT-SKILLS.md).
+Preview without writing with `--detect` (add `--json` for machine-readable output). Use `--scope global` for your home directory instead of one project, or `--client all --target DIR` to force every client. The path matrix, detection table, root-discovery order and the verification gate are in [docs/CLIENT-SKILLS.md](docs/CLIENT-SKILLS.md).
 
 ## Use it in another project
 
