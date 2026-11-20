@@ -177,15 +177,36 @@ The same algorithm is implemented in the gateway (`welcome_to_colab.py`), Python
 
 ## Client skills (Cursor, OpenCode, VS Code, Windsurf, Claude Code, Codex)
 
-The eight audited packs are portable `SKILL.md` files. One command detects the OS and the installed editors, finds the project root from any directory, and installs into every detected client's real discovery path:
+The eight audited packs are portable `SKILL.md` files. One command detects the OS and the installed editors, finds the project root from any directory, and installs into every detected client's real discovery path.
+
+### Straight from git, one line
+
+Run this from the project folder, or from any nested folder inside it:
 
 ```bash
-git clone https://github.com/azurebluezone/zombiecoder-agent-skills.git
-python3 /path/to/zombiecoder-agent-skills/install.py          # defaults to --auto
-python3 /path/to/zombiecoder-agent-skills/install.py --check
+git clone --depth 1 https://github.com/azurebluezone/zombiecoder-agent-skills.git /tmp/zombiecoder-agent-skills && python3 /tmp/zombiecoder-agent-skills/install.py
 ```
 
-Preview without writing with `--detect` (add `--json` for machine-readable output). Use `--scope global` for your home directory instead of one project, or `--client all --target DIR` to force every client. The path matrix, detection table, root-discovery order and the verification gate are in [docs/CLIENT-SKILLS.md](docs/CLIENT-SKILLS.md).
+The clone downloads to `/tmp/zombiecoder-agent-skills` (a temporary folder you can delete at any time). The installer writes the eight packs into the detected project's `.agents/skills`, `.claude/skills`, `.github/skills` and `.opencode/skills`, plus one marked block in `AGENTS.md` and `CLAUDE.md`. Expected tail:
+
+```text
+os: Linux (Ubuntu 22.04.5 LTS) x86_64
+root: /path/to/your/project (git)
+detected: vscode, codex, opencode
+not found: claude, cursor, windsurf
+project agents: 8 installed, 0 unchanged -> /path/to/your/project/.agents/skills
+...
+CLIENT_SKILLS_INSTALLED 8
+AUTO_CLIENT_INSTALL_OK
+```
+
+Confirm the copies are byte-identical:
+
+```bash
+python3 /tmp/zombiecoder-agent-skills/install.py --check
+```
+
+`CLIENT_SKILLS_PRESENT 8` plus `AUTO_CLIENT_INSTALL_OK` is the pass. In VS Code's Skills panel the Workspace count goes from 0 to 8; in Codex and OpenCode the eight slugs appear in the skill list. Preview without writing with `--detect` (add `--json` for machine-readable output). Use `--scope global` for your home directory instead of one project, or `--client all --target DIR` to force every client. The path matrix, detection table, root-discovery order and the verification gate are in [docs/CLIENT-SKILLS.md](docs/CLIENT-SKILLS.md).
 
 ## Use it in another project
 

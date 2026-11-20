@@ -7,7 +7,14 @@ page maps the real paths and gives the one command that installs all of them.
 ## Quick start — one command from any directory
 
 ```bash
-git clone https://github.com/azurebluezone/zombiecoder-agent-skills.git
+git clone --depth 1 https://github.com/azurebluezone/zombiecoder-agent-skills.git /tmp/zombiecoder-agent-skills && python3 /tmp/zombiecoder-agent-skills/install.py
+```
+
+The clone goes to `/tmp/zombiecoder-agent-skills` (about 23 MB, temporary); the
+installer writes only into the detected project and the detected clients'
+folders. If you already cloned the repository, run its `install.py` directly:
+
+```bash
 python3 /path/to/zombiecoder-agent-skills/install.py
 ```
 
