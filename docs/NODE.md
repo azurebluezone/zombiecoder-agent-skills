@@ -5,8 +5,8 @@
 | Item | Why |
 | --- | --- |
 | Node 18+ | The package uses only `fs` and `path`; no native modules |
-| `skills.jsonl` | 2.3 MB, one full skill per line |
-| `terms.jsonl` | 4.8 MB, 72,631 routing terms |
+| `skills.jsonl` | 2.4 MB, one full skill per line |
+| `terms.jsonl` | 5.2 MB, 75,358 routing terms |
 | `node/` | The `SkillLibrary` reader/router/CLI |
 
 The default path is **JSONL**, so it works on any Node version and needs no compiler. On Node 22.5+ you can opt into `skills.db` with `preferSqlite: true`.

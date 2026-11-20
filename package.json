@@ -12,6 +12,12 @@
   },
   "files": [
     "node/",
+    "python/",
+    "server/",
+    "packs/",
+    "data/",
+    "examples/",
+    "docs/",
     "skills.jsonl",
     "terms.jsonl",
     "README.md",
@@ -19,7 +25,13 @@
     "NOTICE.md"
   ],
   "scripts": {
-    "test": "node node/test.js"
+    "test": "node node/test.js",
+    "check:packs": "python3 tools/check_skill_packs.py",
+    "check:extra": "python3 tools/check_extra_packs.py",
+    "check:remaining": "python3 tools/check_remaining_packs.py",
+    "check:mcp": "python3 tools/check_skill_mcp.py",
+    "install:skills": "python3 tools/install_opencode_skills.py",
+    "mcp": "python3 server/skill_mcp.py"
   },
   "keywords": [
     "agents",

@@ -87,11 +87,11 @@ it first, then requires `skills.db` to match `files["skills.db"].sha256` and
 
 | Metric | Value |
 | --- | ---: |
-| Skills (`active=1`) | 248 |
-| Term rows | 72,631 |
-| Body bytes | 2,044,906 |
-| Sources | 6 |
-| DB size | ~8.6 MB after `VACUUM` |
+| Skills (`active=1`) | 256 |
+| Term rows | 75,358 |
+| Body bytes | 2,094,643 |
+| Sources | 7 |
+| DB size | ~9.9 MB after `VACUUM` |
 
 Verify with:
 

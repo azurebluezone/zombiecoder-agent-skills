@@ -1,0 +1,518 @@
+{
+  "schema_version": "1.0.0",
+  "locale": "bn",
+  "kind": "intent_bridge",
+  "normalization": "NFC",
+  "max_terms": 24,
+  "note": "Bengali intent entries expand to English retrieval terms for the existing term index. These are query rewrites for retrieval, not literal translations. The file is data only: no code is executed.",
+  "entries": [
+    {
+      "bn": "ল্যান্ডিং পেজ ডিজাইন",
+      "en": "landing page design"
+    },
+    {
+      "bn": "ল্যান্ডিং পেজ",
+      "en": "landing page"
+    },
+    {
+      "bn": "ওয়েব ডিজাইন",
+      "en": "web design landing page"
+    },
+    {
+      "bn": "ডিজাইন সিস্টেম",
+      "en": "design system ui"
+    },
+    {
+      "bn": "ডেটাবেস ডিজাইন",
+      "en": "database designer schema"
+    },
+    {
+      "bn": "ডেটাবেস স্কিমা",
+      "en": "database schema design"
+    },
+    {
+      "bn": "ডেটাবেস মাইগ্রেশন",
+      "en": "database schema migration"
+    },
+    {
+      "bn": "কোড রিভিউ",
+      "en": "code reviewer review"
+    },
+    {
+      "bn": "কোড অডিট",
+      "en": "code audit security review"
+    },
+    {
+      "bn": "ব্রাউজার অটোমেশন",
+      "en": "browser automation"
+    },
+    {
+      "bn": "রেগুলার এক্সপ্রেশন",
+      "en": "regex regular expression"
+    },
+    {
+      "bn": "মেশিন লার্নিং",
+      "en": "machine learning"
+    },
+    {
+      "bn": "ডেটা সায়েন্স",
+      "en": "data science"
+    },
+    {
+      "bn": "ফুল স্ট্যাক",
+      "en": "full stack"
+    },
+    {
+      "bn": "এপিআই ডিজাইন",
+      "en": "api design endpoint reviewer"
+    },
+    {
+      "bn": "এপিআই রিভিউ",
+      "en": "api design reviewer"
+    },
+    {
+      "bn": "পারফরম্যান্স অডিট",
+      "en": "performance audit profiler"
+    },
+    {
+      "bn": "সিকিউরিটি অডিট",
+      "en": "security audit threat"
+    },
+    {
+      "bn": "অ্যাক্সেসিবিলিটি অডিট",
+      "en": "accessibility audit wcag"
+    },
+    {
+      "bn": "টেস্ট অটোমেশন",
+      "en": "test automation playwright"
+    },
+    {
+      "bn": "ডিবাগ টেস্ট",
+      "en": "debug failing playwright test"
+    },
+    {
+      "bn": "বাগ ফিক্স",
+      "en": "bug fix debug"
+    },
+    {
+      "bn": "ডকার ডিপ্লয়মেন্ট",
+      "en": "docker deployment"
+    },
+    {
+      "bn": "ক্লাউড হোস্টিং",
+      "en": "cloud hosting"
+    },
+    {
+      "bn": "শেয়ারড হোস্টিং",
+      "en": "shared hosting"
+    },
+    {
+      "bn": "সার্ভার সেটআপ",
+      "en": "server setup"
+    },
+    {
+      "bn": "ডিপ্লয়মেন্ট গাইড",
+      "en": "deployment guide"
+    },
+    {
+      "bn": "ভিডিও এডিট",
+      "en": "video editing"
+    },
+    {
+      "bn": "অডিও এডিট",
+      "en": "audio editing"
+    },
+    {
+      "bn": "কোর্স ডিজাইন",
+      "en": "course curriculum design"
+    },
+    {
+      "bn": "লেসন প্ল্যান",
+      "en": "lesson plan curriculum"
+    },
+    {
+      "bn": "ব্যবসা পরিকল্পনা",
+      "en": "business strategy plan"
+    },
+    {
+      "bn": "মার্কেটিং প্ল্যান",
+      "en": "marketing plan"
+    },
+    {
+      "bn": "প্রোডাক্ট রোডম্যাপ",
+      "en": "product roadmap"
+    },
+    {
+      "bn": "ডিজাইনার",
+      "en": "designer"
+    },
+    {
+      "bn": "ডিজাইন",
+      "en": "design"
+    },
+    {
+      "bn": "ল্যান্ডিং",
+      "en": "landing"
+    },
+    {
+      "bn": "পেজ",
+      "en": "page"
+    },
+    {
+      "bn": "ডেটাবেস",
+      "en": "database"
+    },
+    {
+      "bn": "ডেটা",
+      "en": "data"
+    },
+    {
+      "bn": "স্কিমা",
+      "en": "schema"
+    },
+    {
+      "bn": "মাইগ্রেশন",
+      "en": "migration"
+    },
+    {
+      "bn": "ব্রাউজার",
+      "en": "browser"
+    },
+    {
+      "bn": "অটোমেশন",
+      "en": "automation"
+    },
+    {
+      "bn": "টেস্টিং",
+      "en": "testing"
+    },
+    {
+      "bn": "টেস্ট",
+      "en": "test"
+    },
+    {
+      "bn": "কোড",
+      "en": "code"
+    },
+    {
+      "bn": "রিভিউয়ার",
+      "en": "reviewer"
+    },
+    {
+      "bn": "রিভিউ",
+      "en": "review"
+    },
+    {
+      "bn": "সিকিউরিটি",
+      "en": "security"
+    },
+    {
+      "bn": "নিরাপত্তা",
+      "en": "security"
+    },
+    {
+      "bn": "অডিট",
+      "en": "audit"
+    },
+    {
+      "bn": "পারফরম্যান্স",
+      "en": "performance"
+    },
+    {
+      "bn": "ডিপ্লয়মেন্ট",
+      "en": "deployment"
+    },
+    {
+      "bn": "ডিপ্লয়",
+      "en": "deploy"
+    },
+    {
+      "bn": "হোস্টিং",
+      "en": "hosting"
+    },
+    {
+      "bn": "সার্ভার",
+      "en": "server"
+    },
+    {
+      "bn": "ভিপিএস",
+      "en": "vps"
+    },
+    {
+      "bn": "এপিআই",
+      "en": "api"
+    },
+    {
+      "bn": "ব্যাকএন্ড",
+      "en": "backend"
+    },
+    {
+      "bn": "ফ্রন্টএন্ড",
+      "en": "frontend"
+    },
+    {
+      "bn": "মোবাইল",
+      "en": "mobile"
+    },
+    {
+      "bn": "অ্যাপ",
+      "en": "app"
+    },
+    {
+      "bn": "ভিডিও",
+      "en": "video"
+    },
+    {
+      "bn": "অডিও",
+      "en": "audio"
+    },
+    {
+      "bn": "ইমেজ",
+      "en": "image"
+    },
+    {
+      "bn": "ছবি",
+      "en": "image"
+    },
+    {
+      "bn": "ব্যানার",
+      "en": "banner"
+    },
+    {
+      "bn": "মার্কেটিং",
+      "en": "marketing"
+    },
+    {
+      "bn": "ব্যবসা",
+      "en": "business"
+    },
+    {
+      "bn": "শিক্ষা",
+      "en": "education"
+    },
+    {
+      "bn": "কোর্স",
+      "en": "course"
+    },
+    {
+      "bn": "ক্লাস",
+      "en": "lesson"
+    },
+    {
+      "bn": "পাঠ",
+      "en": "lesson"
+    },
+    {
+      "bn": "ফাইল",
+      "en": "file"
+    },
+    {
+      "bn": "রিফ্যাক্টর",
+      "en": "refactor"
+    },
+    {
+      "bn": "ডিবাগ",
+      "en": "debug"
+    },
+    {
+      "bn": "এরর",
+      "en": "error"
+    },
+    {
+      "bn": "বাগ",
+      "en": "bug"
+    },
+    {
+      "bn": "পাইথন",
+      "en": "python"
+    },
+    {
+      "bn": "জাভাস্ক্রিপ্ট",
+      "en": "javascript"
+    },
+    {
+      "bn": "টাইপস্ক্রিপ্ট",
+      "en": "typescript"
+    },
+    {
+      "bn": "পিএইচপি",
+      "en": "php"
+    },
+    {
+      "bn": "লারাভেল",
+      "en": "laravel"
+    },
+    {
+      "bn": "ওয়ার্ডপ্রেস",
+      "en": "wordpress"
+    },
+    {
+      "bn": "মাইএসকিউএল",
+      "en": "mysql"
+    },
+    {
+      "bn": "মঙ্গোডিবি",
+      "en": "mongodb"
+    },
+    {
+      "bn": "এসকিউলাইট",
+      "en": "sqlite"
+    },
+    {
+      "bn": "রেজেক্স",
+      "en": "regex"
+    },
+    {
+      "bn": "ডকার",
+      "en": "docker"
+    },
+    {
+      "bn": "কুবারনেটিস",
+      "en": "kubernetes"
+    },
+    {
+      "bn": "গিট",
+      "en": "git"
+    },
+    {
+      "bn": "ডকুমেন্টেশন",
+      "en": "documentation"
+    },
+    {
+      "bn": "ডকুমেন্ট",
+      "en": "document"
+    },
+    {
+      "bn": "আর্কিটেকচার",
+      "en": "architecture"
+    },
+    {
+      "bn": "প্ল্যানিং",
+      "en": "planning"
+    },
+    {
+      "bn": "রোডম্যাপ",
+      "en": "roadmap"
+    },
+    {
+      "bn": "প্রোডাক্ট",
+      "en": "product"
+    },
+    {
+      "bn": "ইউএক্স",
+      "en": "ux"
+    },
+    {
+      "bn": "ইউআই",
+      "en": "ui"
+    },
+    {
+      "bn": "অ্যাক্সেসিবিলিটি",
+      "en": "accessibility"
+    },
+    {
+      "bn": "রেসপন্সিভ",
+      "en": "responsive"
+    },
+    {
+      "bn": "লোগো",
+      "en": "logo"
+    },
+    {
+      "bn": "পোস্টার",
+      "en": "poster"
+    },
+    {
+      "bn": "প্রেজেন্টেশন",
+      "en": "presentation"
+    },
+    {
+      "bn": "স্ক্রিপ্ট",
+      "en": "script"
+    },
+    {
+      "bn": "রিসার্চ",
+      "en": "research"
+    },
+    {
+      "bn": "অ্যানালাইসিস",
+      "en": "analysis"
+    },
+    {
+      "bn": "এআই",
+      "en": "ai"
+    },
+    {
+      "bn": "এলএলএম",
+      "en": "llm"
+    },
+    {
+      "bn": "প্রম্পট",
+      "en": "prompt"
+    },
+    {
+      "bn": "এজেন্ট",
+      "en": "agent"
+    },
+    {
+      "bn": "ওয়েবসাইট",
+      "en": "website"
+    },
+    {
+      "bn": "ওয়েব",
+      "en": "web"
+    },
+    {
+      "bn": "সাইট",
+      "en": "site"
+    },
+    {
+      "bn": "সিস্টেম",
+      "en": "system"
+    },
+    {
+      "bn": "এসকিউলাইট ডেটাবেস",
+      "en": "sqlite database wal migration index backup"
+    },
+    {
+      "bn": "মাইএসকিউএল ডেটাবেস",
+      "en": "mysql database explain index backup migration"
+    },
+    {
+      "bn": "হোস্টিং ডিপ্লয়",
+      "en": "hosting deployment apache vhost tls permissions"
+    },
+    {
+      "bn": "পিএইচপি ডিপ্লয়",
+      "en": "php deployment opcache fpm composer"
+    },
+    {
+      "bn": "সি++ বিল্ড",
+      "en": "c++ build cmake compiler sanitizer"
+    },
+    {
+      "bn": "সি++",
+      "en": "c++ cpp compiler"
+    },
+    {
+      "bn": "ক্রোম ডেভটুলস",
+      "en": "chrome devtools protocol cdp headless"
+    },
+    {
+      "bn": "পাইথন ভার্চুয়াল এনভায়রনমেন্ট",
+      "en": "python venv pyproject typing unittest asyncio cli"
+    },
+    {
+      "bn": "পাইথন প্যাকেজিং",
+      "en": "python packaging pyproject venv unittest cli"
+    },
+    {
+      "bn": "জাভাস্ক্রিপ্ট টাইপস্ক্রিপ্ট",
+      "en": "javascript typescript node esm http server fetch abort test vite next"
+    },
+    {
+      "bn": "নোড টাইপস্ক্রিপ্ট",
+      "en": "node typescript esm strip http server fetch"
+    }
+  ]
+}

@@ -5,7 +5,7 @@
 | Item | Why |
 | --- | --- |
 | Python 3.9+ | The package uses only the standard library (`sqlite3`, `re`, `json`) |
-| `skills.db` | 8.6 MB SQLite file with 248 skills and 72,631 term rows |
+| `skills.db` | 9.9 MB SQLite file with 256 skills and 75,358 term rows |
 | `python/` | The `zombie_skills` package (no runtime dependencies) |
 
 No network, no API key and no GitHub access is needed at chat time.
@@ -146,11 +146,11 @@ Read-only connection. Raises `FileNotFoundError` with a hint when the DB is miss
 ```python
 {
   "db": "/data/skills.db",
-  "db_bytes": 8986624,
-  "total": 248,
-  "active": 248,
-  "terms": 72631,
-  "bytes": 2044906,
+  "db_bytes": 9928704,
+  "total": 256,
+  "active": 256,
+  "terms": 75358,
+  "bytes": 2094643,
   "sources": [{"source": "...", "skill_count": 182, ...}],
 }
 ```

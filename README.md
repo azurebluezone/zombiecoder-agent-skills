@@ -1,6 +1,6 @@
 # ZombieCoder Agent Skills
 
-A portable, auditable skill library for AI agents. It packages **248 curated `SKILL.md` skills** from six MIT-licensed public repositories into one SQLite database plus dependency-free JSONL exports, with a deterministic local router that injects the best two skills into a chat request.
+A portable, auditable skill library for AI agents. It packages **256 skills**: **248 curated `SKILL.md` skills** from six MIT-licensed public repositories plus **8 local language, data, hosting and browser runbooks**, all in one SQLite database with dependency-free JSONL exports and a deterministic local router that injects the best two skills into a chat request.
 
 No GitHub access is needed at chat time. Copy `skills.db` (or the JSONL files) into any Python or Node project and route locally.
 
@@ -12,16 +12,19 @@ user text -> tokenizer -> SQLite/JSONL term index -> weighted score -> top 2 ski
 
 | File | Size | Purpose |
 | --- | ---: | --- |
-| `skills.db` | 8.6 MB | Canonical SQLite store: `skills`, `skill_terms`, `skill_sources`, `meta` |
-| `skills.jsonl` | 2.3 MB | One full skill per line, for Node and other JSON readers |
-| `terms.jsonl` | 4.8 MB | 72,631 routing terms (`term`, `skill_id`, `weight`) |
+| `skills.db` | 9.9 MB | Canonical SQLite store: `skills`, `skill_terms`, `skill_sources`, `meta` |
+| `skills.jsonl` | 2.4 MB | One full skill per line, for Node and other JSON readers |
+| `terms.jsonl` | 5.2 MB | 75,358 routing terms (`term`, `skill_id`, `weight`) |
 | `skills.meta.json` | 2 KB | Counts, source summary, SHA-256 and byte sizes |
+| `packs/` | — | Editable `SKILL.md` sources for the local runbooks (Python, JavaScript/TypeScript, PHP, C++, CDP, SQLite, MySQL, hosting) |
 | `python/` | — | `zombie-skills` Python package (stdlib only) |
 | `node/` | — | Zero-dependency Node.js reader, router and CLI |
+| `server/` | — | Zero-dependency HTTP loader plus a separate stdio MCP module |
+| `examples/` | — | Python client and a live small-model tool loop (Ollama) |
 | `tools/` | — | Import, audit, export and build tools |
 | `audit/` | — | Full keep/drop report (`report.json`, `report.csv`) |
 
-Current build: **248 skills**, **72,631 term rows**, **2,044,906 bytes** of skill bodies. Six upstream sources, all MIT:
+Current build: **256 skills**, **75,358 term rows**, **2,094,643 bytes** of skill bodies. Six upstream sources plus the local pack source, all MIT:
 
 | Source | Kept skills |
 | --- | ---: |
@@ -31,8 +34,9 @@ Current build: **248 skills**, **72,631 term rows**, **2,044,906 bytes** of skil
 | `nextlevelbuilder/ui-ux-pro-max-skill` | 7 |
 | `ConardLi/garden-skills` | 6 |
 | `morluto/rea` | 5 |
+| `local/zombiecoder-packs` | 8 |
 
-The original import contained 589 skills. The audit removed **341**: 206 sales/marketing/brokerage/corporate/compliance skills, 68 offensive or abuse-oriented skills, and 67 redirect-only stubs. See [docs/AUDIT.md](docs/AUDIT.md) for the policy and the full report.
+The original import contained 589 skills. The audit removed **341**: 206 sales/marketing/brokerage/corporate/compliance skills, 68 offensive or abuse-oriented skills, and 67 redirect-only stubs. The eight local runbooks were added after that audit and are not part of the 248 upstream skills. See [docs/AUDIT.md](docs/AUDIT.md) for the policy and the full report.
 
 ## Quick start
 
@@ -82,6 +86,55 @@ const { messages, names } = library.inject(
 
 Full guide: [docs/NODE.md](docs/NODE.md).
 
+### Skill server (Python, stdlib only)
+
+```bash
+python3 server/skill_server.py --port 8787
+curl -s http://127.0.0.1:8787/health
+curl -s 'http://127.0.0.1:8787/skills/database-designer?mode=card'
+```
+
+The server is read-only and exposes two small-model tools, `search_skills` and
+`get_skill`. It returns a compact card by default and the full body only on an
+explicit call. Full endpoints and the tool loop: [server/README.md](server/README.md).
+
+A real local-model demo:
+
+```bash
+python3 examples/ollama_tool_loop.py
+```
+
+### MCP (separate module)
+
+The same two tools are available over stdio MCP, independent of the
+ZombieCoder plugin:
+
+```bash
+opencode mcp add skills -- python3 /absolute/path/server/skill_mcp.py
+opencode mcp list          # ✓ skills connected
+python3 tools/check_skill_mcp.py   # SKILL_MCP_OK
+```
+
+Setup, tool schema, the plugin allowlist boundary and the client loop:
+[docs/MCP.md](docs/MCP.md).
+
+### OpenCode native skills
+
+The eight local packs can also be installed as native OpenCode skills, so the
+host loads them in every working directory without the HTTP server:
+
+```bash
+python3 tools/install_opencode_skills.py        # -> ~/.opencode/skills/<slug>/SKILL.md
+python3 tools/install_opencode_skills.py --check
+opencode reload
+opencode api GET /api/skill                     # includes the eight local slugs
+```
+
+The installer validates `name`, `description` (1-1024 characters), `source` and
+`license` before copying, and is idempotent. The check
+`python3 tools/check_remaining_packs.py` proves the installed files and the
+registry entry together.
+
 ### CLI cheat sheet
 
 ```bash
@@ -118,12 +171,18 @@ The same algorithm is implemented in the gateway (`welcome_to_colab.py`), Python
 | `write a changelog for the last release` | `changelog-generator` 5.29, `rea-changelog-update` 3.89 |
 | `book to skill` | `book-to-skill` 8.79, `cs-book-to-skill` 3.19 |
 | `android reverse engineering` | `reverse-engineering` 9.49, `mobile-reverse` 3.69 |
+| `python venv pyproject typing unittest asyncio cli` | `python-operations` 28.02 |
+| `node esm typescript strip http server fetch abort vite next` | `javascript-typescript-operations` 25.43 |
 | `hello how are you` | no injection |
 
 ## Use it in another project
 
 - Python: [docs/PYTHON.md](docs/PYTHON.md) — copy the DB, `pip install -e python`, inject before your OpenAI-compatible call.
 - Node: [docs/NODE.md](docs/NODE.md) — copy `skills.jsonl` + `terms.jsonl`, `require("./node")`, inject before your chat call.
+- Server: [server/README.md](server/README.md) — run the read-only HTTP loader; route, card, inject, and two tools.
+- MCP: [docs/MCP.md](docs/MCP.md) — stdio MCP module, OpenCode setup, tool schema, plugin boundary and `SKILL_MCP_OK` check.
+- Portable pack: [docs/SKILL-PACK.md](docs/SKILL-PACK.md) — hand this document to an agent in another project; it selects and writes the project-local skill files.
+- Invocation contract: [docs/INVOCATION.md](docs/INVOCATION.md) — host behaviour, provenance, trust and token budget.
 - Gateway: [docs/GATEWAY.md](docs/GATEWAY.md) — the Colab/Flask app pulls this repository over HTTPS, verifies the DB SHA-256 and replaces wall memory.
 - Client compatibility: [docs/CLIENTS.md](docs/CLIENTS.md) — OpenCode, VS Code/Continue, curl, OpenAI/Anthropic endpoints.
 - Schema: [docs/SCHEMA.md](docs/SCHEMA.md).

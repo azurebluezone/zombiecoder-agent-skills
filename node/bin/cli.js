@@ -19,6 +19,7 @@ Options:
   --db <path>      skills.db    (default: next to skills.jsonl)
   --sqlite         read skills.db via node:sqlite instead of JSONL
   --json           machine-readable output
+  --no-expand      disable the Bengali intent bridge for this call
   --limit <n>      max results (default: 2 for route, 50 for list)
   --min-score <n>  routing threshold (default: 3.0)
   --offset <n>     list offset`);
@@ -26,12 +27,13 @@ Options:
 
 function parse(argv) {
   const args = [...argv];
-  const options = { json: false, limit: null, minScore: 3.0, offset: 0, q: "", source: "" };
+  const options = { json: false, expand: true, limit: null, minScore: 3.0, offset: 0, q: "", source: "" };
   const positional = [];
   let command = null;
   while (args.length) {
     const arg = args.shift();
     if (arg === "--json") options.json = true;
+    else if (arg === "--no-expand") options.expand = false;
     else if (arg === "--sqlite") options.preferSqlite = true;
     else if (arg === "--jsonl") options.jsonl = args.shift();
     else if (arg === "--terms") options.terms = args.shift();
@@ -116,12 +118,26 @@ function main(argv) {
   if (command === "route") {
     const text = positional.join(" ").trim();
     if (!text) throw new Error("route needs some text");
+    const expanded = library.expand(text);
     const matches = library.route(text, {
       limit: options.limit || 2,
       minScore: options.minScore,
+      expand: options.expand,
     });
     if (options.json) {
-      console.log(JSON.stringify({ text, tokens: tokenize(text).slice(0, 20), matches }, null, 2));
+      const query = options.expand ? expanded : text;
+      console.log(
+        JSON.stringify(
+          {
+            text,
+            expanded: options.expand && expanded !== text ? expanded : null,
+            tokens: tokenize(query).slice(0, 20),
+            matches,
+          },
+          null,
+          2
+        )
+      );
     } else if (!matches.length) {
       console.log("no match above threshold");
     } else {

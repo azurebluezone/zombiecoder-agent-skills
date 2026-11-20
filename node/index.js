@@ -22,6 +22,78 @@ const STOPWORDS = new Set([
   "task", "tasks", "work", "working", "step", "steps",
 ]);
 
+const DEFAULT_INTENTS = path.join(__dirname, "..", "data", "bn-intents.json");
+const intentCache = new Map();
+const MAX_INTENT_CACHE = 4;
+
+/**
+ * Normalise Bengali text to NFC. Unicode decomposes yya, rra and rha to
+ * base + nukta, so a precomposed and a decomposed keyboard input still meet
+ * on the same spelling.
+ */
+function normalizeText(text) {
+  return String(text || "").normalize("NFC");
+}
+
+function loadIntents(file) {
+  const explicit = Boolean(file || process.env.ZOMBIE_SKILLS_INTENTS);
+  const target = path.resolve(
+    file || process.env.ZOMBIE_SKILLS_INTENTS || DEFAULT_INTENTS
+  );
+  const cached = intentCache.get(target);
+  if (cached) return cached;
+  let data;
+  try {
+    const raw = JSON.parse(fs.readFileSync(target, "utf8"));
+    const entries = (Array.isArray(raw.entries) ? raw.entries : [])
+      .filter((entry) => entry && entry.bn && entry.en)
+      .map((entry) => ({ bn: normalizeText(entry.bn), en: String(entry.en) }))
+      .sort((a, b) => b.bn.length - a.bn.length || a.bn.localeCompare(b.bn));
+    data = {
+      schemaVersion: String(raw.schema_version || ""),
+      locale: String(raw.locale || ""),
+      maxTerms: Number(raw.max_terms) || 24,
+      entries,
+    };
+  } catch (error) {
+    if (explicit) {
+      throw new Error(`intent bridge unavailable: ${target} (${error.message})`);
+    }
+    data = { schemaVersion: "", locale: "", maxTerms: 0, entries: [] };
+  }
+  if (intentCache.size >= MAX_INTENT_CACHE) intentCache.clear();
+  intentCache.set(target, data);
+  return data;
+}
+
+/**
+ * Expand Bengali intent into English retrieval terms. Entries are applied
+ * longest first so a phrase such as "ডিজাইন সিস্টেম" wins over "ডিজাইন".
+ * The cap keeps the expansion inside the router's token budget.
+ */
+function expandQuery(text, intents, options = {}) {
+  const source = normalizeText(text);
+  const data = intents || loadIntents(options.intents);
+  if (!data.entries.length) return source;
+  let output = source;
+  let addedTerms = 0;
+  let applied = 0;
+  for (const entry of data.entries) {
+    if (!output.includes(entry.bn)) continue;
+    const occurrences = output.split(entry.bn).length - 1;
+    const englishTerms = entry.en.split(/\s+/).filter(Boolean).length * occurrences;
+    if (addedTerms + englishTerms > data.maxTerms) continue;
+    output = output.split(entry.bn).join(` ${entry.en} `);
+    addedTerms += englishTerms;
+    applied += occurrences;
+    if (applied >= data.maxTerms) break;
+  }
+  return output
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/\s+([,.;:!?])/g, "$1")
+    .trim();
+}
+
 function tokenize(text) {
   const out = [];
   const seen = new Set();
@@ -70,6 +142,8 @@ class SkillLibrary {
     this._termMap = null;
     this._df = null;
     this._sqlite = null;
+    this.intentsPath = options.intents || process.env.ZOMBIE_SKILLS_INTENTS || null;
+    this._intents = null;
   }
 
   _loadJsonl() {
@@ -254,11 +328,21 @@ class SkillLibrary {
     return this._byId.get(id) || this._bySlug.get(id) || null;
   }
 
+  _loadIntents() {
+    if (!this._intents) this._intents = loadIntents(this.intentsPath);
+    return this._intents;
+  }
+
+  expand(text) {
+    return expandQuery(text, this._loadIntents());
+  }
+
   route(text, options = {}) {
     this._ensure();
     const limit = Math.min(Math.max(Number(options.limit) || 2, 1), 20);
     const minScore = Number.isFinite(Number(options.minScore)) ? Number(options.minScore) : 3.0;
-    const tokens = tokenize(text).slice(0, 40);
+    const query = options.expand === false ? normalizeText(text) : this.expand(text);
+    const tokens = tokenize(query).slice(0, 40);
     if (!tokens.length) return [];
     const scores = new Map();
     const matched = new Map();
@@ -273,7 +357,7 @@ class SkillLibrary {
       }
     }
     if (!scores.size) return [];
-    const haystack = String(text || "").toLowerCase();
+    const haystack = String(query || "").toLowerCase();
     const matches = [];
     for (const [skillId, base] of scores.entries()) {
       const skill = this._byId.get(skillId);
@@ -342,4 +426,8 @@ module.exports = {
   skillBlock,
   injectMessages,
   defaultPaths,
+  normalizeText,
+  loadIntents,
+  expandQuery,
+  DEFAULT_INTENTS,
 };

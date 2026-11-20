@@ -1,10 +1,17 @@
 """Deterministic keyword router shared by the CLI, server and tests."""
 from __future__ import annotations
 
+import json
+import os
 import re
 import sqlite3
+import unicodedata
+from pathlib import Path
 from typing import Any
 
+DEFAULT_INTENTS = Path(__file__).resolve().parents[2] / "data" / "bn-intents.json"
+_MAX_INTENT_CACHE = 4
+_INTENTS_CACHE: dict[str, dict[str, Any]] = {}
 TOKEN_RE = re.compile(r"[A-Za-z][A-Za-z0-9_+.-]{1,40}|[\u0980-\u09FF]{2,20}")
 STOPWORDS = {
     "the", "and", "for", "with", "that", "this", "from", "your", "you", "are",
@@ -16,6 +23,95 @@ STOPWORDS = {
     "under", "between", "via", "per", "etc", "skill", "skills", "agent", "agents",
     "task", "tasks", "work", "working", "step", "steps",
 }
+
+
+def normalize_text(text: str) -> str:
+    """Normalise Bengali text to NFC.
+
+    Unicode decomposes yya, rra and rha to base + nukta, so precomposed and
+    decomposed keyboard input meet on the same spelling.
+    """
+    return unicodedata.normalize("NFC", str(text or ""))
+
+
+def load_intents(path: str | os.PathLike[str] | None = None) -> dict[str, Any]:
+    """Load the Bengali intent bridge, or an empty bridge if it is absent.
+
+    An explicitly configured path (argument or ZOMBIE_SKILLS_INTENTS) must
+    exist; a missing default file keeps the library English-only instead of
+    breaking an installed package.
+    """
+    env = os.environ.get("ZOMBIE_SKILLS_INTENTS", "").strip()
+    explicit = bool(path or env)
+    if path:
+        target = Path(path).expanduser()
+    elif env:
+        target = Path(env).expanduser()
+    else:
+        target = DEFAULT_INTENTS
+    key = str(target)
+    cached = _INTENTS_CACHE.get(key)
+    if cached is not None:
+        return cached
+    try:
+        raw = json.loads(target.read_text(encoding="utf-8"))
+        entries = [
+            {"bn": normalize_text(str(entry.get("bn"))), "en": str(entry.get("en"))}
+            for entry in (raw.get("entries") or [])
+            if isinstance(entry, dict) and entry.get("bn") and entry.get("en")
+        ]
+        entries.sort(key=lambda entry: (-len(entry["bn"]), entry["bn"]))
+        data = {
+            "schema_version": str(raw.get("schema_version") or ""),
+            "locale": str(raw.get("locale") or ""),
+            "max_terms": int(raw.get("max_terms") or 24),
+            "entries": entries,
+        }
+    except Exception as exc:
+        if explicit:
+            raise FileNotFoundError(f"intent bridge unavailable: {target} ({exc})") from exc
+        data = {"schema_version": "", "locale": "", "max_terms": 0, "entries": []}
+    if len(_INTENTS_CACHE) >= _MAX_INTENT_CACHE:
+        _INTENTS_CACHE.clear()
+    _INTENTS_CACHE[key] = data
+    return data
+
+
+def expand_query(
+    text: str,
+    intents: dict[str, Any] | None = None,
+    path: str | os.PathLike[str] | None = None,
+) -> str:
+    """Expand Bengali intent into English retrieval terms.
+
+    Entries are applied longest first, so a phrase wins over one of its words.
+    The cap keeps the rewritten query inside the router's token budget.
+    """
+    source = normalize_text(text)
+    data = intents if intents is not None else load_intents(path)
+    entries = data.get("entries") or []
+    if not entries:
+        return source
+    limit = max(int(data.get("max_terms") or 24), 1)
+    output = source
+    added = 0
+    applied = 0
+    for entry in entries:
+        bengali = entry["bn"]
+        if bengali not in output:
+            continue
+        occurrences = output.count(bengali)
+        english_terms = len(entry["en"].split()) * occurrences
+        if added + english_terms > limit:
+            continue
+        output = output.replace(bengali, f" {entry['en']} ")
+        added += english_terms
+        applied += occurrences
+        if applied >= limit:
+            break
+    output = re.sub(r"[ \t]{2,}", " ", output)
+    output = re.sub(r"\s+([,.;:!?])", r"\1", output)
+    return output.strip()
 
 
 def tokenize(text: str) -> list[str]:
@@ -37,13 +133,18 @@ def route(
     text: str,
     limit: int = 2,
     min_score: float = 3.0,
+    expand: bool = True,
+    intents_path: str | os.PathLike[str] | None = None,
 ) -> list[dict[str, Any]]:
     """Score skills by term weight divided by document frequency.
 
     A term stored in hundreds of skills ("file", "download") is weak evidence;
-    rare terms dominate. Exact name and slug matches get a bonus.
+    rare terms dominate. Exact name and slug matches get a bonus. Bengali
+    input is expanded through the intent bridge before scoring; pass
+    expand=False to route the raw text.
     """
-    tokens = tokenize(text)[:40]
+    query = expand_query(text, path=intents_path) if expand else normalize_text(text)
+    tokens = tokenize(query)[:40]
     if not tokens:
         return []
     marks = ",".join("?" for _ in tokens)
@@ -80,7 +181,7 @@ def route(
             shortlist,
         ).fetchall()
     }
-    haystack = (text or "").lower()
+    haystack = (query or "").lower()
     matches: list[dict[str, Any]] = []
     for skill_id, base in scores.items():
         row = meta.get(skill_id)

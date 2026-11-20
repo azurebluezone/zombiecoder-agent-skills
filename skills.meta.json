@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-11-19T22:25:21Z",
-  "skills": 248,
-  "terms": 72631,
-  "bytes": 2044906,
+  "generated_at": "2026-11-20T02:55:56Z",
+  "skills": 256,
+  "terms": 75358,
+  "bytes": 2094643,
   "audit": {
     "keep": 248,
     "drop": 341,
@@ -34,6 +34,12 @@
       "skills": 13
     },
     {
+      "source": "local/zombiecoder-packs",
+      "url": "local://zombiecoder-packs",
+      "license": "MIT",
+      "skills": 8
+    },
+    {
       "source": "morluto/rea",
       "url": "https://github.com/morluto/rea",
       "license": "MIT",
@@ -54,16 +60,16 @@
   ],
   "files": {
     "skills.db": {
-      "sha256": "d1e2a55825bf077b7a3f4e8708c54bbdebe65aa14c6c6b4a96808db66c6527ed",
-      "bytes": 8986624
+      "sha256": "c16dc97f80eb648837663bb19f9aa50a08ab0a337a329e0c84187210f5da0d60",
+      "bytes": 9928704
     },
     "skills.jsonl": {
-      "sha256": "35221124dbbf955ca3dff07320b5ccbf0b304e426b2be6e4f9129abd3e562611",
-      "bytes": 2314176
+      "sha256": "b98c98cf998cb8ad45c9d881666d0bc2e39ed8c1b65b4bec9f2292b2fee1ce89",
+      "bytes": 2372498
     },
     "terms.jsonl": {
-      "sha256": "f477d9c8ec7ec364b1e0b16a556de3440ff80c0c0e45df2c142caef662810edb",
-      "bytes": 4969455
+      "sha256": "1d46b48cd0f1bee75907d354cc2ec2f80c493f119eb3129e882d99ea0ead28a6",
+      "bytes": 5154787
     }
   }
 }

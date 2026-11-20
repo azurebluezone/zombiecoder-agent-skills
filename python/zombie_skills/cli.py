@@ -6,7 +6,7 @@ import json
 import sys
 from typing import Any
 
-from .router import tokenize
+from .router import expand_query, tokenize
 from .store import SkillStore, default_db_path
 
 
@@ -67,9 +67,22 @@ def cmd_route(args: argparse.Namespace) -> int:
         print("route needs some text", file=sys.stderr)
         return 2
     with _store(args) as store:
-        matches = store.route(text, limit=args.limit, min_score=args.min_score)
+        matches = store.route(
+            text,
+            limit=args.limit,
+            min_score=args.min_score,
+            expand=not args.no_expand,
+        )
     if args.json:
-        _print_json({"text": text, "tokens": tokenize(text)[:20], "matches": matches})
+        expanded = expand_query(text) if not args.no_expand else text
+        _print_json(
+            {
+                "text": text,
+                "expanded": expanded if expanded != text else None,
+                "tokens": tokenize(expanded)[:20],
+                "matches": matches,
+            }
+        )
     else:
         if not matches:
             print("no match above threshold")
@@ -135,6 +148,7 @@ def build_parser() -> argparse.ArgumentParser:
     route.add_argument("text", nargs="+")
     route.add_argument("--limit", type=int, default=2)
     route.add_argument("--min-score", type=float, default=3.0)
+    route.add_argument("--no-expand", action="store_true", help="disable the Bengali intent bridge")
     route.set_defaults(func=cmd_route)
 
     doctor = sub.add_parser("doctor", parents=[common], help="validate the database")

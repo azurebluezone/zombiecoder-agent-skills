@@ -145,9 +145,23 @@ class SkillStore:
             ).fetchone()
         return dict(row) if row else None
 
-    def route(self, text: str, limit: int = 2, min_score: float = 3.0) -> list[dict[str, Any]]:
+    def route(
+        self,
+        text: str,
+        limit: int = 2,
+        min_score: float = 3.0,
+        expand: bool = True,
+        intents_path: str | os.PathLike[str] | None = None,
+    ) -> list[dict[str, Any]]:
         with self._lock:
-            return router.route(self._conn, text, limit=limit, min_score=min_score)
+            return router.route(
+                self._conn,
+                text,
+                limit=limit,
+                min_score=min_score,
+                expand=expand,
+                intents_path=intents_path,
+            )
 
     def inject(
         self,

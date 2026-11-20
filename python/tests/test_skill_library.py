@@ -15,6 +15,7 @@ DB = Path(os.environ.get("ZOMBIE_SKILLS_DB", ROOT / "skills.db"))
 sys.path.insert(0, str(ROOT / "python"))
 
 from zombie_skills import SkillStore  # noqa: E402
+from zombie_skills.router import expand_query  # noqa: E402
 
 
 class SkillLibraryTest(unittest.TestCase):
@@ -66,6 +67,37 @@ class SkillLibraryTest(unittest.TestCase):
 
     def test_route_no_injection_for_smalltalk(self) -> None:
         self.assertEqual(self.store.route("hello how are you", limit=2), [])
+
+    def test_route_bengali_landing(self) -> None:
+        matches = self.store.route("ল্যান্ডিং পেজ ডিজাইন করো", limit=3)
+        self.assertIn("landing", [match["slug"] for match in matches])
+
+    def test_route_bengali_intents(self) -> None:
+        cases = {
+            "ডেটাবেস ডিজাইন করো": {"database-designer", "database-schema-designer"},
+            "ব্রাউজার অটোমেশন": {"browser-automation"},
+            "কোড রিভিউ": {"code-reviewer"},
+            "ডিজাইন সিস্টেম": {"design-system", "ui-design-system"},
+            "পারফরম্যান্স অডিট": {"performance-profiler"},
+        }
+        for text, expected in cases.items():
+            slugs = {match["slug"] for match in self.store.route(text, limit=3)}
+            self.assertTrue(slugs & expected, f"{text}: {slugs}")
+
+    def test_bengali_bridge_is_data_driven(self) -> None:
+        self.assertIn("browser automation", expand_query("ব্রাউজার অটোমেশন"))
+        decomposed = "\u0993\u09af\u09bc\u09c7\u09ac \u09a1\u09bf\u099c\u09be\u0987\u09a8"
+        self.assertIn("web", expand_query(decomposed))
+        self.assertEqual(self.store.route("ব্রাউজার অটোমেশন", limit=3, expand=False), [])
+
+    def test_route_english_unchanged_by_expansion(self) -> None:
+        text = "debug a failing playwright test"
+        expanded = [match["slug"] for match in self.store.route(text, limit=3)]
+        plain = [match["slug"] for match in self.store.route(text, limit=3, expand=False)]
+        self.assertEqual(expanded, plain)
+
+    def test_route_unmapped_bengali_is_empty(self) -> None:
+        self.assertEqual(self.store.route("আজকের আবহাওয়া কেমন", limit=2), [])
 
     def test_inject(self) -> None:
         messages = [{"role": "user", "content": "design a tailwind landing page"}]

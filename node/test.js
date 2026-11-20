@@ -30,6 +30,42 @@ const changelog = library.route("write a changelog for the last release", { limi
 assert.ok(changelog.some((match) => match.name.includes("changelog")));
 assert.deepStrictEqual(library.route("hello how are you", { limit: 2 }), []);
 
+// Bengali intent bridge: phrase wins over token, and expansion is the cause.
+const bengaliLanding = library.route("ল্যান্ডিং পেজ ডিজাইন করো", { limit: 3 });
+assert.ok(bengaliLanding.some((match) => match.slug === "landing"), "Bengali landing query");
+assert.ok(
+  library.route("ডেটাবেস ডিজাইন করো", { limit: 3 }).some((match) =>
+    ["database-designer", "database-schema-designer"].includes(match.slug)
+  ),
+  "Bengali database query"
+);
+assert.ok(
+  library.route("ব্রাউজার অটোমেশন", { limit: 3 }).some((match) => match.slug === "browser-automation"),
+  "Bengali browser query"
+);
+assert.ok(
+  library.route("কোড রিভিউ", { limit: 3 }).some((match) => match.slug === "code-reviewer"),
+  "Bengali code review query"
+);
+assert.deepStrictEqual(library.route("ব্রাউজার অটোমেশন", { limit: 3, expand: false }), []);
+assert.deepStrictEqual(library.route("আজকের আবহাওয়া কেমন", { limit: 2 }), []);
+assert.ok(library.expand("ব্রাউজার অটোমেশন").includes("browser automation"));
+assert.ok(library.expand("ওয়েব ডিজাইন").includes("web design"));
+assert.ok(
+  library
+    .expand("\u0993\u09af\u09bc\u09c7\u09ac \u09a1\u09bf\u099c\u09be\u0987\u09a8")
+    .includes("web"),
+  "decomposed Bengali yya should normalise"
+);
+
+const englishOn = library.route("debug a failing playwright test", { limit: 3 });
+const englishOff = library.route("debug a failing playwright test", { limit: 3, expand: false });
+assert.deepStrictEqual(
+  englishOn.map((match) => match.slug),
+  englishOff.map((match) => match.slug),
+  "English routing must not change"
+);
+
 const skill = library.get("ui-ux-pro-max");
 assert.ok(skill, "ui-ux-pro-max should exist");
 assert.ok(String(skill.body).length > 1000);

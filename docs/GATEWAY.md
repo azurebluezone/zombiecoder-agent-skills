@@ -63,10 +63,10 @@ All fields are optional; omitted values come from the settings. `url` and
   "base": "https://raw.githubusercontent.com/.../main",
   "branch": "main",
   "sha256": "…",
-  "bytes": 8986624,
-  "skills": 248,
-  "terms": 72631,
-  "sources": 6,
+  "bytes": 9928704,
+  "skills": 256,
+  "terms": 75358,
+  "sources": 7,
   "elapsed_ms": 1234,
   "stats": { "...": "same shape as GET /api/skills stats" }
 }
@@ -141,8 +141,8 @@ only needs network access and the configured raw URL.
 #    (or run the CLI flag in the same runtime)
 ```
 
-Expected: 248 skills, 72,631 terms, six sources, verified SHA-256. The Skills
-page badge should show `248 skills`, and the wall-memory panel should show the
+Expected: 256 skills, 75,358 terms, seven sources, verified SHA-256. The Skills
+page badge should show `256 skills`, and the wall-memory panel should show the
 same count.
 
 ## Troubleshooting
