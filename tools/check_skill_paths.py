@@ -36,6 +36,7 @@ REQUIRED = (
     "packs/javascript-typescript-operations/SKILL.md",
     "tools/check_skill_server.py",
     "tools/check_skill_mcp.py",
+    "tools/check_agent_onboarding.py",
     "tools/check_extra_packs.py",
     "tools/check_remaining_packs.py",
     "tools/install_opencode_skills.py",
@@ -84,6 +85,14 @@ def main() -> int:
     if mcp_check.is_file():
         text = mcp_check.read_text(encoding="utf-8")
         check(MCP_CHECK_MARKER in text, f"MCP check is missing marker: {MCP_CHECK_MARKER}")
+
+    onboarding_check = ROOT / "tools" / "check_agent_onboarding.py"
+    if onboarding_check.is_file():
+        text = onboarding_check.read_text(encoding="utf-8")
+        check(
+            "AGENT_ONBOARDING_OK" in text,
+            "onboarding check is missing marker: AGENT_ONBOARDING_OK",
+        )
 
     remaining_check = ROOT / "tools" / "check_remaining_packs.py"
     if remaining_check.is_file():

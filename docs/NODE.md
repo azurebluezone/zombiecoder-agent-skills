@@ -7,6 +7,7 @@
 | Node 18+ | The package uses only `fs` and `path`; no native modules |
 | `skills.jsonl` | 2.4 MB, one full skill per line |
 | `terms.jsonl` | 5.2 MB, 75,358 routing terms |
+| `data/bn-intents.json` | Bengali intent bridge; without it the router stays English-only |
 | `node/` | The `SkillLibrary` reader/router/CLI |
 
 The default path is **JSONL**, so it works on any Node version and needs no compiler. On Node 22.5+ you can opt into `skills.db` with `preferSqlite: true`.
@@ -29,10 +30,36 @@ npm install github:azurebluezone/zombiecoder-agent-skills
 
 ### Vendor the files
 
-Copy `node/index.js`, `node/bin/cli.js`, `skills.jsonl` and `terms.jsonl` into your project. No install step is required.
+No install step is required. Keep the exports and the intents file in the
+layout the reader resolves by default:
+
+```text
+vendor/
+  skills.jsonl
+  terms.jsonl
+  data/
+    bn-intents.json
+  zombie-skills/
+    index.js
+    bin/cli.js
+```
+
+```bash
+mkdir -p vendor/zombie-skills/bin vendor/data
+cp node/index.js vendor/zombie-skills/index.js
+cp node/bin/cli.js vendor/zombie-skills/bin/cli.js
+cp skills.jsonl terms.jsonl vendor/
+cp data/bn-intents.json vendor/data/
+```
+
+`skills.jsonl` is resolved next to `index.js/..`, `terms.jsonl` next to
+`skills.jsonl`, and the intents bridge at `<vendor>/data/bn-intents.json`.
+Override any of them with `ZOMBIE_SKILLS_JSONL`, `ZOMBIE_SKILLS_TERMS` or
+`ZOMBIE_SKILLS_INTENTS`; a missing explicit intents path is an error, while a
+missing default keeps English routing working.
 
 ```js
-const { SkillLibrary } = require("./vendor/zombie-skills"); // whatever folder you copied node/ to
+const { SkillLibrary } = require("./vendor/zombie-skills/index.js");
 ```
 
 ## Minimal use
@@ -59,7 +86,22 @@ const library = new SkillLibrary({
 });
 ```
 
-Environment variables work too: `ZOMBIE_SKILLS_JSONL`, `ZOMBIE_SKILLS_TERMS`, `ZOMBIE_SKILLS_DB`.
+Environment variables work too: `ZOMBIE_SKILLS_JSONL`, `ZOMBIE_SKILLS_TERMS`, `ZOMBIE_SKILLS_DB`, `ZOMBIE_SKILLS_INTENTS`.
+
+## Bengali routing
+
+The router expands a Bengali intent into English retrieval terms before
+scoring, so the same library answers both languages:
+
+```js
+const library = new SkillLibrary();
+console.log(library.route("পাইথন ভার্চুয়াল এনভায়রনমেন্ট", { limit: 2 }));
+// top match: python-operations
+```
+
+This needs `data/bn-intents.json` (127 entries). If the file is missing and no
+explicit path is set, the library stays English-only instead of failing; set
+`ZOMBIE_SKILLS_INTENTS=/abs/path/bn-intents.json` to point at a copy elsewhere.
 
 ## Inject before an OpenAI-compatible call
 

@@ -34,6 +34,15 @@ def normalize_text(text: str) -> str:
     return unicodedata.normalize("NFC", str(text or ""))
 
 
+def _intent_candidates() -> list[Path]:
+    """Default bridge locations: repo layout, vendored project, user cache."""
+    return [
+        DEFAULT_INTENTS,
+        Path.cwd() / "data" / "bn-intents.json",
+        Path.home() / ".zombie-skills" / "data" / "bn-intents.json",
+    ]
+
+
 def load_intents(path: str | os.PathLike[str] | None = None) -> dict[str, Any]:
     """Load the Bengali intent bridge, or an empty bridge if it is absent.
 
@@ -48,7 +57,10 @@ def load_intents(path: str | os.PathLike[str] | None = None) -> dict[str, Any]:
     elif env:
         target = Path(env).expanduser()
     else:
-        target = DEFAULT_INTENTS
+        target = next(
+            (candidate for candidate in _intent_candidates() if candidate.is_file()),
+            DEFAULT_INTENTS,
+        )
     key = str(target)
     cached = _INTENTS_CACHE.get(key)
     if cached is not None:

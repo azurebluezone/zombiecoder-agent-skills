@@ -155,6 +155,7 @@ def compact_card(skill: dict[str, Any], max_chars: int = DEFAULT_CARD_CHARS) -> 
     steps = _step_headings(sections)
     if not steps:
         steps = _pick(sections, ("workflow", "steps", "process", "how to"), 6)
+    verify = _pick(sections, ("verify", "verification"), 2)
 
     parts = [
         f"SKILL: {skill.get('slug')}",
@@ -165,6 +166,10 @@ def compact_card(skill: dict[str, Any], max_chars: int = DEFAULT_CARD_CHARS) -> 
     if steps:
         parts.append(
             "STEPS:\n" + "\n".join(f"{index}. {item}" for index, item in enumerate(steps, 1))
+        )
+    if verify:
+        parts.append(
+            "VERIFY:\n" + "\n".join(f"- {item[:140]}" for item in verify)
         )
     parts.append(f"SOURCE: {skill.get('source')} ({skill.get('license') or 'unknown'})")
     parts.append(TRUST_NOTE)

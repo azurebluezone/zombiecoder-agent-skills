@@ -6,6 +6,7 @@
 | --- | --- |
 | Python 3.9+ | The package uses only the standard library (`sqlite3`, `re`, `json`) |
 | `skills.db` | 9.9 MB SQLite file with 256 skills and 75,358 term rows |
+| `data/bn-intents.json` | Bengali intent bridge; without it the router stays English-only |
 | `python/` | The `zombie_skills` package (no runtime dependencies) |
 
 No network, no API key and no GitHub access is needed at chat time.
@@ -20,7 +21,25 @@ python3 -m venv .venv
 pip install -e python
 ```
 
-Or copy `python/zombie_skills/` into your project and import it directly. The package reads `skills.db` read-only.
+Or vendor the package into the project root and run from that root:
+
+```text
+my-project/
+  skills.db
+  data/bn-intents.json
+  zombie_skills/
+```
+
+```bash
+cp -r python/zombie_skills ./zombie_skills
+cp skills.db ./skills.db
+mkdir -p data && cp data/bn-intents.json ./data/
+```
+
+The package reads `skills.db` read-only. The default lookup checks
+`ZOMBIE_SKILLS_DB`, then the repo layout, then `./skills.db`, then
+`~/.zombie-skills/skills.db`; run from the project root or set the variable.
+The Bengali bridge is resolved the same way through `ZOMBIE_SKILLS_INTENTS`.
 
 Point the package at the database:
 
@@ -47,6 +66,22 @@ with SkillStore("/data/skills.db") as store:
 ```
 
 `route()` returns full skill rows (including `body`) because the injector needs them. `list()` returns previews only.
+
+## Bengali routing
+
+The same call accepts Bengali; the intent bridge rewrites it to English terms
+before scoring:
+
+```python
+with SkillStore() as store:
+    print(store.route("পাইথন ভার্চুয়াল এনভায়রনমেন্ট", limit=2)[0]["slug"])
+    # python-operations
+```
+
+The bridge is resolved from the repo layout, then `./data/bn-intents.json`,
+then `~/.zombie-skills/data/bn-intents.json`; set `ZOMBIE_SKILLS_INTENTS` for
+an explicit path. A missing default file keeps the library English-only; a
+missing explicit path raises instead of silently degrading.
 
 ## Inject before an OpenAI-compatible call
 

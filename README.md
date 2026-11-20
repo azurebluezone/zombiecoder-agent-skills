@@ -206,6 +206,7 @@ python3 tools/refresh_exports.py --db skills.db --out .
 # 4. Verify
 PYTHONPATH=python python3 -m unittest discover -s python/tests -v
 node node/test.js
+npm run check:onboarding   # clean install, MCP, vendor paths, cards, remote HEAD
 ```
 
 `tools/build_from_wall_memory.py` exports the gateway's wall-memory tables into this repository layout.

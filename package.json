@@ -18,6 +18,8 @@
     "data/",
     "examples/",
     "docs/",
+    "tools/",
+    "skills.db",
     "skills.jsonl",
     "terms.jsonl",
     "README.md",
@@ -30,6 +32,7 @@
     "check:extra": "python3 tools/check_extra_packs.py",
     "check:remaining": "python3 tools/check_remaining_packs.py",
     "check:mcp": "python3 tools/check_skill_mcp.py",
+    "check:onboarding": "python3 tools/check_agent_onboarding.py",
     "install:skills": "python3 tools/install_opencode_skills.py",
     "mcp": "python3 server/skill_mcp.py"
   },
