@@ -24,6 +24,7 @@ REQUIRED = (
     "server/README.md",
     "docs/MCP.md",
     "docs/SKILL-PACK.md",
+    "docs/CLIENT-SKILLS.md",
     "examples/ollama_tool_loop.py",
     "examples/skill-note.md",
     "examples/packs/php_example.php",
@@ -40,6 +41,8 @@ REQUIRED = (
     "tools/check_extra_packs.py",
     "tools/check_remaining_packs.py",
     "tools/install_opencode_skills.py",
+    "tools/install_client_skills.py",
+    "tools/check_client_skills.py",
     "tools/check_skill_paths.py",
 )
 
@@ -48,7 +51,13 @@ MCP_MARKERS = ("SERVER_NAME", "search_skills", "get_skill")
 CHECK_MARKER = "SKILL_SERVER_OK"
 MCP_CHECK_MARKER = "SKILL_MCP_OK"
 REMAINING_CHECK_MARKER = "REMAINING_PACKS_OK"
-LINK_TARGETS = ("server/README.md", "docs/MCP.md", "docs/SKILL-PACK.md")
+CLIENT_CHECK_MARKER = "CLIENT_SKILLS_OK"
+LINK_TARGETS = (
+    "server/README.md",
+    "docs/MCP.md",
+    "docs/SKILL-PACK.md",
+    "docs/CLIENT-SKILLS.md",
+)
 
 FAILURES: list[str] = []
 
@@ -100,6 +109,14 @@ def main() -> int:
         check(
             REMAINING_CHECK_MARKER in text,
             f"remaining-pack check is missing marker: {REMAINING_CHECK_MARKER}",
+        )
+
+    client_check = ROOT / "tools" / "check_client_skills.py"
+    if client_check.is_file():
+        text = client_check.read_text(encoding="utf-8")
+        check(
+            CLIENT_CHECK_MARKER in text,
+            f"client check is missing marker: {CLIENT_CHECK_MARKER}",
         )
 
     readme = ROOT / "README.md"

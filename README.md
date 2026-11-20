@@ -175,8 +175,22 @@ The same algorithm is implemented in the gateway (`welcome_to_colab.py`), Python
 | `node esm typescript strip http server fetch abort vite next` | `javascript-typescript-operations` 25.43 |
 | `hello how are you` | no injection |
 
+## Client skills (Cursor, OpenCode, VS Code, Windsurf, Claude Code, Codex)
+
+The eight audited packs are portable `SKILL.md` files. One command installs them into every client's real discovery path and writes the `AGENTS.md` / `CLAUDE.md` index:
+
+```bash
+git clone https://github.com/azurebluezone/zombiecoder-agent-skills.git
+cd zombiecoder-agent-skills
+python3 tools/install_client_skills.py --client all --target /path/to/your/project
+python3 tools/install_client_skills.py --check --client all --target /path/to/your/project
+```
+
+Use `--scope global` for your home directory instead of one project. The path matrix, per-client commands and the verification gate are in [docs/CLIENT-SKILLS.md](docs/CLIENT-SKILLS.md).
+
 ## Use it in another project
 
+- Client skills: [docs/CLIENT-SKILLS.md](docs/CLIENT-SKILLS.md) — one command for Cursor, OpenCode, VS Code, Windsurf, Claude Code and Codex.
 - Python: [docs/PYTHON.md](docs/PYTHON.md) — copy the DB, `pip install -e python`, inject before your OpenAI-compatible call.
 - Node: [docs/NODE.md](docs/NODE.md) — copy `skills.jsonl` + `terms.jsonl`, `require("./node")`, inject before your chat call.
 - Server: [server/README.md](server/README.md) — run the read-only HTTP loader; route, card, inject, and two tools.
